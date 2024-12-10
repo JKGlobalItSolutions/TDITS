@@ -33,46 +33,59 @@ function Gallery() {
   };
 
   return (
-    <Container className="mb-5">
+    <>
       <Breadcrumb />
-      <h1 className="text-center my-5">Gallery</h1>
-      <Row className="g-4">
-        {currentImages.map((image) => (
-          <Col key={image.id} sm={6} md={4} lg={3}>
-            <Card className="border-0 shadow-sm h-100">
-              <Card.Img
-                variant="top"
-                src={image.src}
-                alt={image.alt}
-                style={{ height: '250px', objectFit: 'cover' }}
-              />
-            </Card>
-          </Col>
-        ))}
-      </Row>
-
-      <div className="d-flex justify-content-center mt-4">
-        <Pagination>
-          <Pagination.Prev
-            onClick={() => handlePageChange(Math.max(activePage - 1, 1))}
-            disabled={activePage === 1}
-          />
-          {[...Array(totalPages)].map((_, index) => (
-            <Pagination.Item
-              key={index + 1}
-              active={activePage === index + 1}
-              onClick={() => handlePageChange(index + 1)}
-            >
-              {index + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next
-            onClick={() => handlePageChange(Math.min(activePage + 1, totalPages))}
-            disabled={activePage === totalPages}
-          />
-        </Pagination>
+      <div
+        style={{
+          backgroundImage: 'url(/images/banner-without-content.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          padding: '100px 0',
+          textAlign: 'center',
+        }}
+      >
+        <h1 style={{ color: 'white', margin: 0 }}>Gallery</h1>
       </div>
-    </Container>
+
+      <Container className="my-5">
+        <Row className="g-4">
+          {currentImages.map((image) => (
+            <Col key={image.id} sm={6} md={4} lg={3}>
+              <Card className="border-0 shadow-sm h-100">
+                <Card.Img
+                  variant="top"
+                  src={image.src}
+                  alt={image.alt}
+                  style={{ height: '250px', objectFit: 'cover' }}
+                />
+              </Card>
+            </Col>
+          ))}
+        </Row>
+
+        <div className="d-flex justify-content-center mt-4">
+          <Pagination>
+            <Pagination.Prev
+              onClick={() => handlePageChange(Math.max(activePage - 1, 1))}
+              disabled={activePage === 1}
+            />
+            {[...Array(totalPages)].map((_, index) => (
+              <Pagination.Item
+                key={index + 1}
+                active={activePage === index + 1}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() => handlePageChange(Math.min(activePage + 1, totalPages))}
+              disabled={activePage === totalPages}
+            />
+          </Pagination>
+        </div>
+      </Container>
+    </>
   );
 }
 
