@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, Pagination } from 'react-bootstrap';
 
 function Gallery() {
   const imagesPerPage = 9;
   const [activePage, setActivePage] = useState(1);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [animationKey, setAnimationKey] = useState(0);
 
   // Sample gallery data - replace with your actual images
   const galleryImages = [
@@ -29,11 +31,80 @@ function Gallery() {
 
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
+    setAnimationKey(prevKey => prevKey + 1);
   };
+
+  const observerCallback = useCallback((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+        entry.target.style.visibility = 'visible';
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    setIsLoaded(true);
+
+    const observer = new IntersectionObserver(observerCallback, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    const hiddenElements = document.querySelectorAll('.hidden');
+    hiddenElements.forEach((el) => {
+      el.style.visibility = 'hidden';
+      observer.observe(el);
+    });
+
+    return () => {
+      hiddenElements.forEach((el) => observer.unobserve(el));
+    };
+  }, [observerCallback, animationKey]);
 
   return (
     <>
+      <style>
+        {`
+          :root {
+            --animation-duration: 0.8s;
+            --animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+          }
+
+          .hidden {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity var(--animation-duration) var(--animation-timing-function),
+                        transform var(--animation-duration) var(--animation-timing-function);
+          }
+
+          .show {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          .fade-in {
+            animation: fadeIn var(--animation-duration) var(--animation-timing-function) forwards;
+          }
+
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+
+          .hover-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+          }
+
+          .hover-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          }
+        `}
+      </style>
+
       <div
+        className={`${isLoaded ? 'fade-in' : ''}`}
         style={{
           backgroundImage: 'url(/images/banner-without-content.png)',
           backgroundSize: 'cover',
@@ -46,15 +117,15 @@ function Gallery() {
       </div>
 
       <Container className="my-5">
-        <Row className="g-4">
-          {currentImages.map((image) => (
-            <Col key={image.id} sm={6} md={4} lg={4}>
-              <Card className="border-0 shadow-sm h-100">
+        <Row className="g-4" key={animationKey}>
+          {currentImages.map((image, index) => (
+            <Col key={image.id} sm={6} md={4} lg={4} className="hidden" style={{transitionDelay: `${index * 0.1}s`}}>
+              <Card className="border-0 shadow-sm h-100 hover-card">
                 <Card.Img
                   variant="top"
                   src={image.src}
                   alt={image.alt}
-                  style={{ height: '300px', width: 'auto', objectFit: 'fit' }}
+                  style={{ height: '300px', width: 'auto', objectFit: 'cover' }}
                 />
               </Card>
             </Col>
@@ -88,3 +159,4 @@ function Gallery() {
 }
 
 export default Gallery;
+
