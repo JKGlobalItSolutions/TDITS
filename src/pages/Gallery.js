@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Pagination } from 'react-bootstrap';
-import Breadcrumb from '../components/Breadcrumb';
 
 function Gallery() {
-  const imagesPerPage = 8;
+  const imagesPerPage = 9;
   const [activePage, setActivePage] = useState(1);
 
   // Sample gallery data - replace with your actual images
   const galleryImages = [
-    { id: 1, src: '/placeholder.svg', alt: 'Gallery Image 1' },
-    { id: 2, src: '/placeholder.svg', alt: 'Gallery Image 2' },
-    { id: 3, src: '/placeholder.svg', alt: 'Gallery Image 3' },
-    { id: 4, src: '/placeholder.svg', alt: 'Gallery Image 4' },
-    { id: 5, src: '/placeholder.svg', alt: 'Gallery Image 5' },
-    { id: 6, src: '/placeholder.svg', alt: 'Gallery Image 6' },
-    { id: 7, src: '/placeholder.svg', alt: 'Gallery Image 7' },
-    { id: 8, src: '/placeholder.svg', alt: 'Gallery Image 8' },
-    { id: 9, src: '/placeholder.svg', alt: 'Gallery Image 9' },
-    { id: 10, src: '/placeholder.svg', alt: 'Gallery Image 10' },
-    { id: 11, src: '/placeholder.svg', alt: 'Gallery Image 11' },
-    { id: 12, src: '/placeholder.svg', alt: 'Gallery Image 12' },
+    { id: 1, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 1' },
+    { id: 2, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 2' },
+    { id: 3, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 3' },
+    { id: 4, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 4' },
+    { id: 5, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 5' },
+    { id: 6, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 6' },
+    { id: 7, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 7' },
+    { id: 8, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 8' },
+    { id: 9, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 9' },
+    { id: 10, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 10' },
+    { id: 11, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 11' },
+    { id: 12, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 12' },
   ];
 
   const totalPages = Math.ceil(galleryImages.length / imagesPerPage);
@@ -34,7 +33,6 @@ function Gallery() {
 
   return (
     <>
-      <Breadcrumb />
       <div
         style={{
           backgroundImage: 'url(/images/banner-without-content.png)',
@@ -50,13 +48,13 @@ function Gallery() {
       <Container className="my-5">
         <Row className="g-4">
           {currentImages.map((image) => (
-            <Col key={image.id} sm={6} md={4} lg={3}>
+            <Col key={image.id} sm={6} md={4} lg={4}>
               <Card className="border-0 shadow-sm h-100">
                 <Card.Img
                   variant="top"
                   src={image.src}
                   alt={image.alt}
-                  style={{ height: '250px', objectFit: 'cover' }}
+                  style={{ height: '300px', width: 'auto', objectFit: 'fit' }}
                 />
               </Card>
             </Col>

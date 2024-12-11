@@ -3,47 +3,54 @@ import { Container, Row, Col, Button, Image, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 function Home() {
+  const currentEvents = [
+    {
+      id: 1,
+      title: "Leadership Summit 2024",
+      date: "February 10, 2024",
+      time: "9:00 AM - 5:00 PM",
+      venue: "TDITS Conference Hall",
+      description: "Join us for an inspiring day of leadership development, networking, and professional growth.",
+      image: "/images/leadership-summit.jpg",
+    },
+    {
+      id: 2,
+      title: "Business Networking Gala",
+      date: "March 15, 2024",
+      time: "7:00 PM - 10:00 PM",
+      venue: "Grand Hotel, Tiruvannamalai",
+      description: "An exclusive evening for business leaders to connect, collaborate, and celebrate success.",
+      image: "/images/leadership-summit.jpg",
+    },
+    {
+      id: 3,
+      title: "Business Networking Gala",
+      date: "March 15, 2024",
+      time: "7:00 PM - 10:00 PM",
+      venue: "Grand Hotel, Tiruvannamalai",
+      description: "An exclusive evening for business leaders to connect, collaborate, and celebrate success.",
+      image: "/images/leadership-summit.jpg",
+    },
+  ];
+
   return (
     <Container fluid className="p-0">
-      {/* Banner Section */}
-      <div
-        style={{
-          backgroundImage: 'url(/images/banner.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '500px',
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            textAlign: 'center',
-            color: 'white',
-          }}
-        >
-          <h1 style={{ fontSize: '3rem', fontWeight: 'bold' }}>Welcome to TDITS</h1>
-          <p style={{ fontSize: '1.5rem' }}>
-            Empowering Innovation & Business Excellence in Tiruvannamalai
-          </p>
-        </div>
-      </div>
+      <Image src="/images/banner.png" className="py-2 img-fluid" rounded />
 
-      {/* Main Content */}
       <Container>
         {/* Section 1: About */}
-        <section className="my-5">
+        <section className="my-3">
           <Row className="align-items-center">
             <Col md={6}>
-              <Image src="/images/about-home.jpg" fluid rounded />
+              <Image src="/images/about-us.webp" className="p-2 img-fluid" rounded />
             </Col>
             <Col md={6}>
               <h2>About TDITS</h2>
               <p>
-                The Tiruvannamalai Development Information Technology Society (TDITS) is a professional association committed to driving innovation, promoting business growth, and fostering community development through technology and collaboration.
+                The <b>Tiruvannamalai</b> Development Information Technology Society <b>(TDITS)</b> is a hub for innovation, collaboration, and community development. We bring together like-minded individuals, businesses, and organizations to create a thriving ecosystem for growth and advancement.
+              </p>
+              <p>
+                We believe in the power of collective action and work towards building a network that supports both professional development and societal growth.
               </p>
               <Button variant="primary" as={Link} to="/about" className="mt-3">
                 Learn More
@@ -52,73 +59,29 @@ function Home() {
           </Row>
         </section>
 
-        {/* Section 2: Mission */}
-        <section className="my-5">
-          <h2 className="text-center mb-4">Our Mission</h2>
-          <Row>
-            <Col md={4} className="mb-4">
-              <Card className="shadow-sm h-100">
-                <Card.Body>
-                  <Card.Title>Innovation</Card.Title>
-                  <Card.Text>
-                    We strive to foster technological advancements and creative solutions to empower businesses and individuals.
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4} className="mb-4">
-              <Card className="shadow-sm h-100">
-                <Card.Body>
-                  <Card.Title>Collaboration</Card.Title>
-                  <Card.Text>
-                    By connecting professionals, we create opportunities for partnerships and mutual growth.
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4} className="mb-4">
-              <Card className="shadow-sm h-100">
-                <Card.Body>
-                  <Card.Title>Community Impact</Card.Title>
-                  <Card.Text>
-                    Our initiatives aim to bring positive changes to the local community through education and empowerment.
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </section>
+    
 
         {/* Section 3: Events */}
         <section className="my-5">
           <h2 className="text-center mb-4">Upcoming Events</h2>
-          <Row>
-            <Col md={6} className="mb-4">
-              <Card className="shadow-sm h-100">
-                <Card.Body>
-                  <Card.Title>Leadership Summit 2024</Card.Title>
-                  <Card.Text>
-                    Date: February 10, 2024<br />
-                    Time: 9:00 AM - 5:00 PM<br />
-                    Venue: TDITS Conference Hall
-                  </Card.Text>
-                  <Button variant="primary" className="w-100">Register Now</Button>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6} className="mb-4">
-              <Card className="shadow-sm h-100">
-                <Card.Body>
-                  <Card.Title>Business Networking Gala</Card.Title>
-                  <Card.Text>
-                    Date: March 15, 2024<br />
-                    Time: 7:00 PM - 10:00 PM<br />
-                    Venue: Grand Hotel, Tiruvannamalai
-                  </Card.Text>
-                  <Button variant="primary" className="w-100">RSVP</Button>
-                </Card.Body>
-              </Card>
-            </Col>
+          <Row className="g-4">
+            {currentEvents.map((event) => (
+              <Col key={event.id} md={6} lg={4}>
+                <Card className="h-100 shadow-lg">
+                  <Card.Img
+                    variant="top"
+                    src={event.image}
+                    alt={event.title}
+                    style={{ height: '200px', objectFit: 'cover' }}
+                  />
+                  <Card.Body>
+                    <Card.Title>{event.title}</Card.Title>
+                    <small className="text-muted d-block mb-2">{event.date}</small>
+                    <Card.Text>{event.description}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
           </Row>
         </section>
       </Container>

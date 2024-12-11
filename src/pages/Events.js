@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, Pagination } from 'react-bootstrap';
-import Breadcrumb from '../components/Breadcrumb';
 
 function Events() {
   const eventsPerPage = 6;
@@ -12,56 +11,56 @@ function Events() {
       title: 'Mr. Kartick Dutta',
       date: '10/06/2023',
       description: 'National Institute of Software and Hardware Technology of Durgapur achievement celebration.',
-      image: '/placeholder.svg',
+      image: '/images/leadership-summit.jpg',
     },
     {
       id: 2,
       title: 'PADMA BHUSHAN HARIVANSH R.',
       date: '11/12/2023',
       description: 'Shri Amitabh Bachchan appreciated the efforts made by the organization.',
-      image: '/placeholder.svg',
+      image: '/images/leadership-summit.jpg',
     },
     {
       id: 3,
       title: "Hon'ble Thawar Chand Gehlot",
       date: '18/09/2021',
       description: 'His contribution in serving humanity and philanthropic activities has been widely recognized.',
-      image: '/placeholder.svg',
+      image: '/images/leadership-summit.jpg',
     },
     {
       id: 4,
       title: 'Event Title Four',
       date: '01/01/2024',
       description: 'Details about the fourth event organized by the community.',
-      image: '/placeholder.svg',
+      image: '/images/leadership-summit.jpg',
     },
     {
       id: 5,
       title: 'Event Title Five',
       date: '02/02/2024',
       description: 'Details about the fifth event organized by the community.',
-      image: '/placeholder.svg',
+      image: '/images/leadership-summit.jpg',
     },
     {
       id: 6,
       title: 'Event Title Six',
       date: '03/03/2024',
       description: 'Details about the sixth event organized by the community.',
-      image: '/placeholder.svg',
+      image: '/images/leadership-summit.jpg',
     },
     {
       id: 7,
       title: 'Event Title Seven',
       date: '04/04/2024',
       description: 'Details about the seventh event organized by the community.',
-      image: '/placeholder.svg',
+      image: '/images/leadership-summit.jpg',
     },
     {
       id: 8,
       title: 'Event Title Eight',
       date: '05/05/2024',
       description: 'Details about the eighth event organized by the community.',
-      image: '/placeholder.svg',
+      image: '/images/leadership-summit.jpg',
     },
   ];
 
@@ -77,7 +76,6 @@ function Events() {
 
   return (
     <>
-      < Breadcrumb />
       <div
         style={{
           backgroundImage: 'url(/images/banner-without-content.png)',
@@ -106,15 +104,7 @@ function Events() {
                   <small className="text-muted d-block mb-2">{event.date}</small>
                   <Card.Text>{event.description}</Card.Text>
                 </Card.Body>
-                <Card.Footer className="bg-white border-0 text-center">
-                  <Button
-                    variant="primary"
-                    className="px-4"
-                    style={{ backgroundColor: '#004aad', border: 'none' }}
-                  >
-                    MORE
-                  </Button>
-                </Card.Footer>
+              
               </Card>
             </Col>
           ))}

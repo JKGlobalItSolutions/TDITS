@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
-import Breadcrumb from '../components/Breadcrumb';
 import emailjs from 'emailjs-com';
 
 function Contact() {
@@ -64,7 +63,6 @@ function Contact() {
 
   return (
     <>
-      <Breadcrumb />
       <div
         style={{
           backgroundImage: 'url(/images/banner-without-content.png)',
