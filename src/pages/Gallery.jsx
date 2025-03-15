@@ -9,18 +9,22 @@ function Gallery() {
 
   // Sample gallery data - replace with your actual images
   const galleryImages = [
-    { id: 1, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 1' },
-    { id: 2, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 2' },
-    { id: 3, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 3' },
-    { id: 4, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 4' },
-    { id: 5, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 5' },
-    { id: 6, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 6' },
-    { id: 7, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 7' },
-    { id: 8, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 8' },
-    { id: 9, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 9' },
-    { id: 10, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 10' },
-    { id: 11, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 11' },
-    { id: 12, src: '/images/leadership-summit.jpg', alt: 'Gallery Image 12' },
+    { id: 1, src: '/Gallery/1.jpeg', alt: 'Gallery Image 1' },
+    { id: 2, src: '/Gallery/2.jpeg', alt: 'Gallery Image 2' },
+    { id: 3, src: '/Gallery/3.jfif', alt: 'Gallery Image 3' },
+    { id: 4, src: '/Gallery/4.jfif', alt: 'Gallery Image 4' },
+    { id: 5, src: '/Gallery/5.jfif', alt: 'Gallery Image 5' },
+    { id: 6, src: '/Gallery/6.jfif', alt: 'Gallery Image 6' },
+    { id: 7, src: '/Gallery/7.jpeg', alt: 'Gallery Image 7' },
+    { id: 8, src: '/Gallery/8.jfif', alt: 'Gallery Image 8' },
+    { id: 9, src: '/Gallery/9.jpeg', alt: 'Gallery Image 9' },
+    { id: 10, src: '/Gallery/10.jpeg', alt: 'Gallery Image 10' },
+    { id: 11, src: '/Gallery/11.jpeg', alt: 'Gallery Image 11' },
+    { id: 12, src: '/Gallery/12.jpeg', alt: 'Gallery Image 12' },
+    { id: 13, src: '/Gallery/13.jfif', alt: 'Gallery Image 13' },
+    { id: 14, src: '/Gallery/14.jfif', alt: 'Gallery Image 14' },
+    { id: 15, src: '/Gallery/15.jpeg', alt: 'Gallery Image 15' },
+    { id: 15, src: '/Gallery/16.jpeg', alt: 'Gallery Image 15' },
   ];
 
   const totalPages = Math.ceil(galleryImages.length / imagesPerPage);

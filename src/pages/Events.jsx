@@ -1,109 +1,193 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Container, Row, Col, Card, Button, Pagination } from 'react-bootstrap';
+"use client"
+
+import { useState, useEffect, useCallback, useRef } from "react"
+import { Container, Row, Col, Card, Pagination, Spinner } from "react-bootstrap"
+import { collection, getDocs, query, orderBy } from "firebase/firestore"
+import { db } from "./firebase-config"
+import { useLocation } from "react-router-dom"
 
 function Events() {
-  const eventsPerPage = 6;
-  const [activePage, setActivePage] = useState(1);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [animationKey, setAnimationKey] = useState(0);
+  const eventsPerPage = 9 // Updated to show 9 events per page
+  const [activePage, setActivePage] = useState(1)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [animationKey, setAnimationKey] = useState(0)
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
+  const observerRef = useRef(null)
+  const location = useLocation()
 
-  const events = [
-    {
-      id: 1,
-      title: 'Mr. Kartick Dutta',
-      date: '10/06/2023',
-      description: 'National Institute of Software and Hardware Technology of Durgapur achievement celebration.',
-      image: '/images/leadership-summit.jpg',
-    },
-    {
-      id: 2,
-      title: 'PADMA BHUSHAN HARIVANSH R.',
-      date: '11/12/2023',
-      description: 'Shri Amitabh Bachchan appreciated the efforts made by the organization.',
-      image: '/images/leadership-summit.jpg',
-    },
-    {
-      id: 3,
-      title: "Hon'ble Thawar Chand Gehlot",
-      date: '18/09/2021',
-      description: 'His contribution in serving humanity and philanthropic activities has been widely recognized.',
-      image: '/images/leadership-summit.jpg',
-    },
-    {
-      id: 4,
-      title: 'Event Title Four',
-      date: '01/01/2024',
-      description: 'Details about the fourth event organized by the community.',
-      image: '/images/leadership-summit.jpg',
-    },
-    {
-      id: 5,
-      title: 'Event Title Five',
-      date: '02/02/2024',
-      description: 'Details about the fifth event organized by the community.',
-      image: '/images/leadership-summit.jpg',
-    },
-    {
-      id: 6,
-      title: 'Event Title Six',
-      date: '03/03/2024',
-      description: 'Details about the sixth event organized by the community.',
-      image: '/images/leadership-summit.jpg',
-    },
-    {
-      id: 7,
-      title: 'Event Title Seven',
-      date: '04/04/2024',
-      description: 'Details about the seventh event organized by the community.',
-      image: '/images/leadership-summit.jpg',
-    },
-    {
-      id: 8,
-      title: 'Event Title Eight',
-      date: '05/05/2024',
-      description: 'Details about the eighth event organized by the community.',
-      image: '/images/leadership-summit.jpg',
-    },
-  ];
+  // Reset states when location changes
+  useEffect(() => {
+    setIsLoaded(false)
+    setLoading(true)
 
-  const totalPages = Math.ceil(events.length / eventsPerPage);
-  const currentEvents = events.slice(
-    (activePage - 1) * eventsPerPage,
-    activePage * eventsPerPage
-  );
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      setIsLoaded(true)
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [location.pathname])
+
+  useEffect(() => {
+    let isMounted = true
+
+    const fetchEvents = async () => {
+      try {
+        const eventsCollection = collection(db, "events")
+        const eventsQuery = query(eventsCollection, orderBy("date", "desc"))
+        const querySnapshot = await getDocs(eventsQuery)
+
+        if (isMounted) {
+          const eventsData = querySnapshot.docs.map((doc) => {
+            const data = doc.data()
+            return {
+              id: doc.id,
+              ...data,
+              date: data.date.toDate().toLocaleDateString(),
+              imageUrl: data.imageUrl || "/images/leadership-summit.jpg", // Use default image if none provided
+            }
+          })
+
+          setEvents(eventsData)
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error("Error fetching events: ", error)
+        if (isMounted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchEvents()
+
+    return () => {
+      isMounted = false
+    }
+  }, [location.pathname])
+
+  const totalPages = Math.ceil(events.length / eventsPerPage)
+  const currentEvents = events.slice((activePage - 1) * eventsPerPage, activePage * eventsPerPage)
 
   const handlePageChange = (pageNumber) => {
-    setActivePage(pageNumber);
-    setAnimationKey(prevKey => prevKey + 1);
-  };
+    setActivePage(pageNumber)
+    setAnimationKey((prevKey) => prevKey + 1)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 
   const observerCallback = useCallback((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('show');
-        entry.target.style.visibility = 'visible';
+        entry.target.classList.add("show")
+        entry.target.style.visibility = "visible"
       }
-    });
-  }, []);
+    })
+  }, [])
 
+  // Setup intersection observer
   useEffect(() => {
-    setIsLoaded(true);
+    if (!isLoaded) return
 
-    const observer = new IntersectionObserver(observerCallback, {
+    // Cleanup previous observer if it exists
+    if (observerRef.current) {
+      observerRef.current.disconnect()
+    }
+
+    // Create new observer
+    observerRef.current = new IntersectionObserver(observerCallback, {
       threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
+      rootMargin: "0px 0px -50px 0px",
+    })
 
-    const hiddenElements = document.querySelectorAll('.hidden');
-    hiddenElements.forEach((el) => {
-      el.style.visibility = 'hidden';
-      observer.observe(el);
-    });
+    // Small delay to ensure DOM elements are ready
+    const timer = setTimeout(() => {
+      const hiddenElements = document.querySelectorAll(".hidden")
+
+      if (hiddenElements.length > 0) {
+        hiddenElements.forEach((el) => {
+          el.style.visibility = "hidden"
+          observerRef.current.observe(el)
+        })
+      }
+    }, 200)
 
     return () => {
-      hiddenElements.forEach((el) => observer.unobserve(el));
-    };
-  }, [observerCallback, animationKey]);
+      clearTimeout(timer)
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [observerCallback, isLoaded, events, loading, animationKey, location.pathname])
+
+  // Function to render pagination numbers intelligently
+  const renderPaginationItems = () => {
+    const items = []
+
+    // If few enough pages, show all
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        items.push(
+          <Pagination.Item key={i} active={activePage === i} onClick={() => handlePageChange(i)}>
+            {i}
+          </Pagination.Item>,
+        )
+      }
+      return items
+    }
+
+    // Show first page
+    items.push(
+      <Pagination.Item key={1} active={activePage === 1} onClick={() => handlePageChange(1)}>
+        1
+      </Pagination.Item>,
+    )
+
+    // Calculate range around current page
+    let startPage = Math.max(2, activePage - 1)
+    let endPage = Math.min(totalPages - 1, activePage + 1)
+
+    // Adjust for edge cases
+    if (activePage <= 3) {
+      endPage = Math.min(4, totalPages - 1)
+    } else if (activePage >= totalPages - 2) {
+      startPage = Math.max(totalPages - 3, 2)
+    }
+
+    // Add ellipsis if needed
+    if (startPage > 2) {
+      items.push(<Pagination.Ellipsis key="ellipsis1" />)
+    }
+
+    // Add pages in the middle
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <Pagination.Item key={i} active={activePage === i} onClick={() => handlePageChange(i)}>
+          {i}
+        </Pagination.Item>,
+      )
+    }
+
+    // Add ellipsis if needed
+    if (endPage < totalPages - 1) {
+      items.push(<Pagination.Ellipsis key="ellipsis2" />)
+    }
+
+    // Show last page
+    if (totalPages > 1) {
+      items.push(
+        <Pagination.Item
+          key={totalPages}
+          active={activePage === totalPages}
+          onClick={() => handlePageChange(totalPages)}
+        >
+          {totalPages}
+        </Pagination.Item>,
+      )
+    }
+
+    return items
+  }
 
   return (
     <>
@@ -143,68 +227,131 @@ function Events() {
             transform: translateY(-5px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
           }
+
+          .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+          }
+
+          .loader-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #0d6efd;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+          }
+
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          
+          .empty-events {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          }
+          
+          .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+          }
+          
+          /* Make sure events container has minimum height */
+          .events-container {
+            min-height: 600px;
+          }
         `}
       </style>
 
       <div
-        className={`${isLoaded ? 'fade-in' : ''}`}
+        className={`${isLoaded ? "fade-in" : ""}`}
         style={{
-          backgroundImage: 'url(/images/banner-without-content.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          padding: '100px 0',
-          textAlign: 'center',
+          backgroundImage: "url(/images/banner-without-content.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          padding: "100px 0",
+          textAlign: "center",
         }}
       >
-        <h1 style={{ color: 'white', margin: 0 }}>Events</h1>
+        <h1 style={{ color: "white", margin: 0 }}>Events</h1>
       </div>
 
-      <Container className="my-5">
-        <Row className="g-4" key={animationKey}>
-          {currentEvents.map((event, index) => (
-            <Col key={event.id} md={6} lg={4} className="hidden" style={{transitionDelay: `${index * 0.1}s`}}>
-              <Card className="h-100 shadow-lg hover-card">
-                <Card.Img
-                  variant="top"
-                  src={event.image}
-                  alt={event.title}
-                  style={{ height: '200px', objectFit: 'cover' }}
-                />
-                <Card.Body>
-                  <Card.Title>{event.title}</Card.Title>
-                  <small className="text-muted d-block mb-2">{event.date}</small>
-                  <Card.Text>{event.description}</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+      <Container className="my-5 events-container">
+        {loading ? (
+          <div className="loader">
+            <Spinner animation="border" role="status" variant="primary">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        ) : events.length === 0 ? (
+          <div className="empty-events text-center">
+            <h3>No events found</h3>
+            <p>Check back later for upcoming events.</p>
+          </div>
+        ) : (
+          <>
+            <Row className="g-4" key={animationKey}>
+              {currentEvents.map((event, index) => (
+                <Col
+                  key={event.id}
+                  md={6}
+                  lg={4}
+                  className="hidden mb-4"
+                  style={{ transitionDelay: `${index * 0.1}s` }}
+                >
+                  <Card className="h-100 shadow-lg hover-card">
+                    <Card.Img
+                      variant="top"
+                      src={event.imageUrl || "/images/leadership-summit.jpg"}
+                      alt={event.title}
+                      style={{ height: "200px", objectFit: "cover" }}
+                      onError={(e) => {
+                        e.target.onerror = null
+                        e.target.src = "/images/leadership-summit.jpg"
+                      }}
+                    />
+                    <Card.Body>
+                      <Card.Title>{event.title}</Card.Title>
+                      <small className="text-muted d-block mb-2">{event.date}</small>
+                      <Card.Text>{event.description}</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
 
-        <div className="d-flex justify-content-center mt-4">
-          <Pagination>
-            <Pagination.Prev
-              onClick={() => handlePageChange(Math.max(activePage - 1, 1))}
-              disabled={activePage === 1}
-            />
-            {[...Array(totalPages)].map((_, index) => (
-              <Pagination.Item
-                key={index + 1}
-                active={activePage === index + 1}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next
-              onClick={() => handlePageChange(Math.min(activePage + 1, totalPages))}
-              disabled={activePage === totalPages}
-            />
-          </Pagination>
-        </div>
+            {totalPages > 1 && (
+              <div className="pagination-container">
+                <Pagination>
+                  <Pagination.First onClick={() => handlePageChange(1)} disabled={activePage === 1} />
+                  <Pagination.Prev
+                    onClick={() => handlePageChange(Math.max(activePage - 1, 1))}
+                    disabled={activePage === 1}
+                  />
+
+                  {renderPaginationItems()}
+
+                  <Pagination.Next
+                    onClick={() => handlePageChange(Math.min(activePage + 1, totalPages))}
+                    disabled={activePage === totalPages}
+                  />
+                  <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={activePage === totalPages} />
+                </Pagination>
+              </div>
+            )}
+          </>
+        )}
       </Container>
     </>
-  );
+  )
 }
 
-export default Events;
+export default Events
 
