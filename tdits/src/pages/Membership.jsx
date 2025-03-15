@@ -31,10 +31,10 @@ function Membership() {
     // Send the email via EmailJS
     emailjs
       .send(
-        'service_xbpvgmc', // Replace with your EmailJS service ID
-        'template_6swbkb9', // Replace with your EmailJS template ID
+        'service_rcu87dr', // Replace with your EmailJS service ID
+        'template_ih56l0k', // Replace with your EmailJS template ID
         templateParams,
-        'bqlWNmTGQqntLsD5l' // Replace with your EmailJS user ID
+        'IoZZSUt6RcebUgHjz' // Replace with your EmailJS user ID
       )
       .then(
         (response) => {
