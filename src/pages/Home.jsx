@@ -269,7 +269,7 @@ function Home() {
       </style>
 
       <Image
-        src="/images/banner.png"
+        src="/images/banner.jpg"
         className={`py-2 img-fluid banner-image ${isLoaded ? "fade-in" : ""}`}
         alt="TDITS Banner"
         rounded
@@ -291,7 +291,7 @@ function Home() {
             <Col md={6}>
               <h2>About TDITS</h2>
               <p>
-                The <b>Tiruvannamalai</b> Development Information Technology Society <b>(TDITS)</b> is a hub for
+                The <b>Tiruvannamalai</b> District Information Technology Society <b>(TDITS)</b> is a hub for
                 innovation, collaboration, and community development. We bring together like-minded individuals,
                 businesses, and organizations to create a thriving ecosystem for growth and advancement.
               </p>
