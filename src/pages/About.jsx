@@ -127,7 +127,7 @@ function About() {
           textAlign: "center",
         }}
       >
-        <h1 style={{ color: "white", margin: 0 }}>About s</h1>
+        <h1 style={{ color: "white", margin: 0 }}>About Us</h1>
       </div>
 
       {/* Main Content */}
